@@ -2,7 +2,7 @@ import os
 
 # API Configuration
 SCRAPFLY_URL = "https://api.scrapfly.io/scrape"
-API_KEY = "your_api_key"
+API_KEY = "your_api_key_here"
 
 # Base URL
 BASE_URL = "https://www.asylumprojects.org"

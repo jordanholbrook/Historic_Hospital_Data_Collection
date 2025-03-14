@@ -9,10 +9,11 @@ def main():
     state_links = get_state_links()
     
     hospital_links = []
-    for _, state_url in state_links.itertuples():
+    for _, state_url in state_links.itertuples(index=False):
+        logger.info(f"Scraping hospitals for state: {state_url}")
         df_hospitals = get_hospital_links(state_url)
         hospital_links.extend(df_hospitals["Hospital Link"].dropna().tolist())
-        time.sleep(2)
+        time.sleep(3)
     
     hospital_details = []
     for hospital_url in hospital_links:
