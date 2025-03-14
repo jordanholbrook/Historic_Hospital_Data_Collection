@@ -57,28 +57,45 @@ def get_hospital_links(state_url: str) -> pd.DataFrame:
     logger.info(f"Hospital links for {state_name} saved.")
     return df_hospitals
 
-def get_hospital_details(hospital_url: str) -> dict:
-    """Extracts hospital details including raw text content."""
-    html_content = fetch_html(hospital_url)
-    soup = BeautifulSoup(html_content, "html.parser")
-    hospital_name = soup.find("h1", id="firstHeading").text.strip() if soup.find("h1", id="firstHeading") else "Unknown"
+def get_hospital_details(hospital_url: str, max_retries: int, retry_delay: int) -> Dict[str, str]:
+    """Extract details of a specific hospital page, including raw text for analysis."""
+    attempt, hospital_name = 0, "Unknown"
+    hospital_info = {"Hospital Name": "Unknown", "URL": hospital_url, "Raw Text": ""}
     
-    hospital_info = {"Hospital Name": hospital_name, "URL": hospital_url, "Raw Text": ""}
+    while attempt < max_retries and hospital_name == "Unknown":
+        html_content = fetch_html(hospital_url)
+        soup = BeautifulSoup(html_content, "html.parser")
+        hospital_name = soup.find("h1", id="firstHeading").text.strip() if soup.find("h1", id="firstHeading") else "Unknown"
+        
+        if hospital_name != "Unknown":
+            hospital_info["Hospital Name"] = hospital_name
+            infobox = soup.find("table", class_="infobox Vcard")
+            if infobox:
+                for row in infobox.find_all("tr"):
+                    cells = row.find_all(["th", "td"])
+                    if len(cells) == 2:
+                        key, value = cells[0].text.strip(), cells[1].text.strip()
+                        
+                        # Handling multiple alternate names
+                        if key == "Alternate Names":
+                            value = " | ".join(value.split("\n"))  # Separate multiple names using " | "
+                        
+                        hospital_info[key] = value
+            
+            # Extract main text from the page, excluding menus and tables
+            content_text = []
+            for paragraph in soup.select("#mw-content-text p"):
+                text = paragraph.text.strip()
+                if text:
+                    content_text.append(text)
+            
+            hospital_info["Raw Text"] = "\n".join(content_text)  # Store raw text for analysis
+            
+            logger.info(f"Extracted details for {hospital_name}.")
+            return hospital_info
+        
+        logger.warning(f"Retrying {hospital_url}... (Attempt {attempt + 1}/{max_retries})")
+        time.sleep(retry_delay)
+        attempt += 1
     
-    # Extract infobox details
-    infobox = soup.find("table", class_="infobox Vcard")
-    if infobox:
-        for row in infobox.find_all("tr"):
-            cells = row.find_all(["th", "td"])
-            if len(cells) == 2:
-                key, value = cells[0].text.strip(), cells[1].text.strip()
-                if key == "Alternate Names":
-                    value = " | ".join(value.split("\n"))
-                hospital_info[key] = value
-    
-    # Extract main content text
-    content_text = [p.text.strip() for p in soup.select("#mw-content-text p") if p.text.strip()]
-    hospital_info["Raw Text"] = "\n".join(content_text)
-    
-    logger.info(f"Extracted details for {hospital_name}.")
     return hospital_info

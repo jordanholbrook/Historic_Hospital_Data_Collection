@@ -3,6 +3,7 @@ import argparse
 from scraper import get_state_links, get_hospital_links, get_hospital_details
 from data_handler import save_to_csv
 from logger import get_logger
+from config import MAX_RETRIES, RETRY_DELAY
 
 logger = get_logger()
 
@@ -35,7 +36,7 @@ def main():
     
     hospital_details = []
     for hospital_url in hospital_links:
-        details = get_hospital_details(hospital_url)
+        details = get_hospital_details(hospital_url, MAX_RETRIES, RETRY_DELAY)
         hospital_details.append(details)
         time.sleep(5)
     
