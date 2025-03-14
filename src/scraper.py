@@ -2,6 +2,7 @@ import requests
 import time
 import pandas as pd
 from bs4 import BeautifulSoup
+from typing import Dict
 from config import SCRAPFLY_URL, API_KEY, BASE_URL, OUTPUT_DIR
 from logger import get_logger
 
@@ -57,10 +58,26 @@ def get_hospital_links(state_url: str) -> pd.DataFrame:
     logger.info(f"Hospital links for {state_name} saved.")
     return df_hospitals
 
-def get_hospital_details(hospital_url: str, max_retries: int, retry_delay: int) -> Dict[str, str]:
+def get_hospital_details(hospital_url: str, state_name: str, max_retries: int, retry_delay: int) -> Dict[str, str]:
     """Extract details of a specific hospital page, including raw text for analysis."""
     attempt, hospital_name = 0, "Unknown"
-    hospital_info = {"Hospital Name": "Unknown", "URL": hospital_url, "Raw Text": ""}
+    hospital_info = {
+        "State": state_name,  # Add State Name here
+        "Hospital Name": "Unknown",
+        "URL": hospital_url,
+        "Established": "",
+        "Construction Began": "",
+        "Opened": "",
+        "Current Status": "",
+        "Building Style": "",
+        "Architect(s)": "",
+        "Alternate Names": "",
+        "Raw Text": "",
+        "Closed": "",
+        "Location": "",
+        "Architecture Style": "",
+        "Peak Patient Population": ""
+    }
     
     while attempt < max_retries and hospital_name == "Unknown":
         html_content = fetch_html(hospital_url)
@@ -80,7 +97,8 @@ def get_hospital_details(hospital_url: str, max_retries: int, retry_delay: int) 
                         if key == "Alternate Names":
                             value = " | ".join(value.split("\n"))  # Separate multiple names using " | "
                         
-                        hospital_info[key] = value
+                        if key in hospital_info:  # Only add keys that match the predefined columns
+                            hospital_info[key] = value
             
             # Extract main text from the page, excluding menus and tables
             content_text = []
