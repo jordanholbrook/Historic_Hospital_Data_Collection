@@ -28,23 +28,30 @@ def main():
             logger.error(f"No data found for the specified state: {args.state}")
             return
 
-    hospital_links = []
-    hospital_details = []
+    # Process each state individually
     for _, state_url in state_links.itertuples(index=False):
         logger.info(f"Scraping hospitals for state: {state_url}")
         df_hospitals = get_hospital_links(state_url)
         state_name = df_hospitals["State"].iloc[0]  # Extract the state name from the DataFrame
-        hospital_links.extend(df_hospitals["Hospital Link"].dropna().tolist())
+
+        hospital_links = df_hospitals["Hospital Link"].dropna().tolist()
+        hospital_details = []
+
+        # Process each hospital in the state
+        for hospital_url in hospital_links:
+            details = get_hospital_details(hospital_url, state_name, MAX_RETRIES, RETRY_DELAY)
+            hospital_details.append(details)
+            time.sleep(5)
+
+        # Save the hospital details for the current state to a CSV file
+        output_filename = f"hospital_details_{state_name}.csv"
+        save_to_csv(hospital_details, output_filename)
+        logger.info(f"Scraping completed for {state_name}. Data saved to {output_filename}.")
+
+        # Pause before moving to the next state
         time.sleep(3)
 
-    for hospital_url in hospital_links:
-        details = get_hospital_details(hospital_url, state_name, MAX_RETRIES, RETRY_DELAY)
-        hospital_details.append(details)
-        time.sleep(5)
-
-    # Save the hospital details to a CSV file
-    save_to_csv(hospital_details, "hospital_details.csv")
-    logger.info("Scraping completed and data saved!")
+    logger.info("All states processed!")
 
 if __name__ == "__main__":
     main()
