@@ -1,7 +1,8 @@
 import os
 
 # OpenAI API Configuration
-API_KEY = os.getenv("OPENAI_API_KEY")  # Set your API key as an environment variable
+#API_KEY = os.getenv("OPENAI_API_KEY")  # Set your API key as an environment variable
+
 URL = "https://api.openai.com/v1/chat/completions"
 HEADERS = {
     "Content-Type": "application/json",
@@ -10,8 +11,8 @@ HEADERS = {
 MODEL = "gpt-4o"
 
 # Directories
-RAW_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/saved_data"
-TEMP_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/processed_data"
+RAW_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/saved_data/test_LLM_pipeline_1"
+TEMP_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/processed_data_test1"
 LINKS_FILE = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/hospital_links.csv"
 FINAL_OUTPUT = f"{TEMP_DIR}/processed_hospitals_combined.csv"
 
