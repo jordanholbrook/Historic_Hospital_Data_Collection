@@ -35,25 +35,6 @@ Below is the data dictionary for the final output file, `/output/processed_data/
 
 ![Mermaid Flow Chart](src/files/Mermaid_Flow_Chart.png)
 
-```mermaid
-graph TD
-    A[Start Scraping] --> B[Scrape Data]
-    B --> C[Generate CSV]
-    C --> D[Scraped Data]
-    D --> E[Start Processing]
-    E --> F[Process Raw Text]
-    F --> G[Generate Processed CSV]
-    G --> H[Processed Data]
-    H --> I[Start Aggregation]
-    I --> J[Aggregate State Files]
-    J --> K[Run Cleaning Scripts]
-    K --> L[Run Validation Scripts]
-    L --> M[Generate Final Output]
-    M --> N[Final Output Data]
-```
-
-
-
 ## Core Business Logic
 
 The pipeline processes hospital data using the following core logic:
