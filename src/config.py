@@ -11,8 +11,8 @@ HEADERS = {
 MODEL = "gpt-4o"
 
 # Directories
-RAW_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/saved_data/test_LLM_pipeline_1"
-TEMP_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/processed_data_test1"
+RAW_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/hospital_details_state"
+TEMP_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/processed_data"
 LINKS_FILE = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/hospital_links.csv"
 FINAL_OUTPUT = f"{TEMP_DIR}/processed_hospitals_combined.csv"
 
