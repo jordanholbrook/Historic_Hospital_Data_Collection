@@ -1,5 +1,20 @@
 import os
 
+# OpenAI API Configuration
+API_KEY = os.getenv("OPENAI_API_KEY")  # Set your API key as an environment variable
+URL = "https://api.openai.com/v1/chat/completions"
+HEADERS = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {API_KEY}"
+}
+MODEL = "gpt-4o"
+
+# Directories
+RAW_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/saved_data"
+TEMP_DIR = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/processed_data"
+LINKS_FILE = "/Users/jordanholbrook/Repos/Historic_Hospital_Data_Collection/output/hospital_links.csv"
+FINAL_OUTPUT = f"{TEMP_DIR}/processed_hospitals_combined.csv"
+
 # API Configuration
 SCRAPFLY_URL = "https://api.scrapfly.io/scrape"
 #API_KEY = "your_api_key_here"
