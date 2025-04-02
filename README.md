@@ -4,6 +4,56 @@
 
 This pipeline processes raw hospital data to produce a consolidated and cleaned dataset of historic hospitals. The final output is stored in `/output/processed_data/processed_hospitals_combined.csv`. The pipeline is designed to standardize, enrich, and validate hospital data for historical research purposes.
 
+## Final Output Data Dictionary
+
+Below is the data dictionary for the final output file, `/output/processed_data/processed_hospitals_combined.csv`:
+
+| Column Name               | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| `state`                   | The U.S. state where the hospital is located.                              |
+| `city`                    | The city where the hospital is located.                                    |
+| `hospital_name`           | The primary name of the hospital.                                          |
+| `alt_name1` to `alt_name5`| Alternative names or aliases for the hospital.                             |
+| `hospital_type`           | The type of hospital (e.g., State Hospitals, Reform Schools).              |
+| `url`                     | URL to the hospital's historical page or reference.                        |
+| `current_status`          | The current operational status of the hospital (e.g., Active, Closed).     |
+| `building_style`          | The architectural style of the hospital's building(s).                     |
+| `architecture_style`      | Specific architectural details, if available.                              |
+| `final_year_opened`       | The year the hospital first opened.                                         |
+| `final_year_closed`       | The year the hospital closed, if applicable.                               |
+| `final_hospital_age`      | The total operational age of the hospital in years.                        |
+| `final_number_of_beds`    | The maximum number of beds recorded for the hospital.                      |
+| `final_number_of_patients`| The maximum number of patients recorded for the hospital.                  |
+| `incomplete_page_flag`    | Flag indicating incomplete or ambiguous data (1 = incomplete, 0 = complete).|
+| `kirkbride_flag`          | Flag indicating if the hospital follows the Kirkbride architectural plan.  |
+| `hand_check_flag`         | Flag indicating if the record requires manual verification.                |
+|---------------------------|-----------------------------------------------------------------------------|
+
+## Process Flow Diagrams
+
+### Diagram 1: Overview of the Process Flow
+
+![Mermaid Flow Chart](src/files/Mermaid_Flow_Chart.png)
+
+```mermaid
+graph TD
+    A[Start Scraping] --> B[Scrape Data]
+    B --> C[Generate CSV]
+    C --> D[Scraped Data]
+    D --> E[Start Processing]
+    E --> F[Process Raw Text]
+    F --> G[Generate Processed CSV]
+    G --> H[Processed Data]
+    H --> I[Start Aggregation]
+    I --> J[Aggregate State Files]
+    J --> K[Run Cleaning Scripts]
+    K --> L[Run Validation Scripts]
+    L --> M[Generate Final Output]
+    M --> N[Final Output Data]
+```
+
+
+
 ## Core Business Logic
 
 The pipeline processes hospital data using the following core logic:
@@ -79,29 +129,6 @@ The pipeline processes hospital data using the following core logic:
    - **`kirkbride_flag`**: Set to `1` if the hospital follows the Kirkbride architectural plan.
    - **`hand_check_flag`**: Set to `1` if the record requires manual verification.
 
-## Data Dictionary
-
-Below is the data dictionary for the final output file, `/output/processed_data/processed_hospitals_combined.csv`:
-
-| Column Name               | Description                                                                 |
-|---------------------------|-----------------------------------------------------------------------------|
-| `state`                   | The U.S. state where the hospital is located.                              |
-| `city`                    | The city where the hospital is located.                                    |
-| `hospital_name`           | The primary name of the hospital.                                          |
-| `alt_name1` to `alt_name5`| Alternative names or aliases for the hospital.                             |
-| `hospital_type`           | The type of hospital (e.g., State Hospitals, Reform Schools).              |
-| `url`                     | URL to the hospital's historical page or reference.                        |
-| `current_status`          | The current operational status of the hospital (e.g., Active, Closed).     |
-| `building_style`          | The architectural style of the hospital's building(s).                     |
-| `architecture_style`      | Specific architectural details, if available.                              |
-| `final_year_opened`       | The year the hospital first opened.                                         |
-| `final_year_closed`       | The year the hospital closed, if applicable.                               |
-| `final_hospital_age`      | The total operational age of the hospital in years.                        |
-| `final_number_of_beds`    | The maximum number of beds recorded for the hospital.                      |
-| `final_number_of_patients`| The maximum number of patients recorded for the hospital.                  |
-| `incomplete_page_flag`    | Flag indicating incomplete or ambiguous data (1 = incomplete, 0 = complete).|
-| `kirkbride_flag`          | Flag indicating if the hospital follows the Kirkbride architectural plan.  |
-| `hand_check_flag`         | Flag indicating if the record requires manual verification.                |
 
 ## How to Use
 
